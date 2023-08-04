@@ -21,26 +21,25 @@ client = slack_sdk.WebClient(token=os.environ['SLACK_TOKEN'],ssl=ssl_context)
 
 BOT_ID = client.api_call("auth.test")['user_id']
 restaurants = ["rest1", "rest2", "rest3"]
-threads_to_reply = []
 @app.route("/slack/messages", methods =["POST"])
 def messages():
         # Parse the request payload
     form_json = json.loads(request.form["payload"])
+    if payload["type"] == 'block_actions':
+        # Check to see what the rest was and update the message
+        selection = form_json["actions"][0]["action_id"]
+        print(selection)
+        if selection == "rest1":
+            print("a")
+            message_text = "1"
+        elif selection == "rest2":
+            print("b")
+            message_text = "2"
+        else:
+            print("c")
+            message_text = "3"
 
-    # Check to see what the rest was and update the message
-    selection = form_json["actions"][0]["action_id"]
-    print(selection)
-    if selection == "rest1":
-        print("a")
-        message_text = "1"
-    elif selection == "rest2":
-        print("b")
-        message_text = "2"
-    else:
-        print("c")
-        message_text = "3"
-
-    client.chat_postMessage(channel=form_json["channel"]["id"],thread_ts=form_json["container"]["thread_ts"],text=message_text)
+        client.chat_postMessage(channel=form_json["channel"]["id"],thread_ts=form_json["container"]["thread_ts"],text=message_text)
 
     return make_response("",200)
 @slack_event_adapter.on('message')
@@ -53,7 +52,6 @@ def message(payload):
     text = event.get('text')
     if user_id != BOT_ID and user_id != None:
         if text in restaurants:
-            threads_to_reply.append(thread)
             client.chat_postMessage(channel=channel_id, thread_ts=thread, text=text[0], blocks=[
             {
                 "type": "actions",
