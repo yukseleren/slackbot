@@ -41,13 +41,7 @@ def messages():
         message_text = "3"
 
     client.chat_postMessage(channel=form_json["channel"]["id"],thread_ts=form_json["container"]["thread_ts"],text=message_text)
-    # response = client.api_call(
-    # "chat.update",
-    # channel=form_json["channel"]["id"],
-    # ts='1690399233.101759',
-    # text=message_text,
-    # attachments=[]
-    # )
+
     return make_response("",200)
 @slack_event_adapter.on('message')
 def message(payload):
@@ -77,35 +71,7 @@ def message(payload):
                 ]
             }
         ])
-    
-        
-                        # blocks =  [ 
-                        #             {
-                        #             "type": "section",
-                        #             "text" :{   
-                        #                 "type" : "mrkdwn",
-                        #                 "text":'yavuz naber ya'
-                                        
-                        #                 }
-                        #             }
-                        #         ]
-                        
-                        #         )
+
 if __name__ == "__main__":
     app.run(debug=True)
-    # ,
-    #                                 {
-    #                                     "type" : "divider"
-    #                                 },
-    #                                 {
-    #                                     "type" : "actions",
-    #                                     "elements" : [
-    #                                         {
-    #                                             "type" : "button",
-    #                                             "text" : "Detailed information for the rest",
-    #                                             "value" : "details",
-    #                                             "confirm" : print("selam")
-    #                                         }
-    #                                     ]
-    #                                 }
-
+    
